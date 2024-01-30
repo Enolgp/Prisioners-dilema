@@ -1,3 +1,3 @@
-# Prisioners-dilema
-A project that intends to test my skills in python, data analysis and AI using the Prisioners dilema as a base as a starting point.
-I am from Spain so the main README is in Spanish, but I will try to do it in English to
+# Dilema del prisionero
+Un proyecto orientado a poner a prueba mis habilidades de programación en Python, analisis de datos e Inteligencia Artificial usando el dilema del prisionero como punto de partida y desarrollandolo según vea conveniente.
+Soy de España por lo que la guía se realizará en Castellano aunque intentaré que los comentarios y esta guía (copiada o adaptada en archivo README_ENG.md) sean en inglés
