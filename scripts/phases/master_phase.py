@@ -2,8 +2,9 @@ class Interaction:
     Agent1 = None
     Agent2 = None
     
-    def __init__(self, n) -> None:
-        self.num = n
+    def __init__(self, ag1, ag2) -> None:
+        self.Agent1 = ag1
+        self.Agent2 = ag2
 
     def pointDistribution(self, ElectionAgent1, ElectionAgent2):
         if ElectionAgent1 == 1 and ElectionAgent2 == 1:
@@ -18,5 +19,14 @@ class Interaction:
         elif ElectionAgent1 == 0 and ElectionAgent2 == 0:
             self.Agent1.add_points(1)
             self.Agent2.add_points(1)
+
+    def saveInMemory(self, electionAgent1, electionAgent2):
+        self.Agent1.add_to_memory([electionAgent1, electionAgent2])
+        self.Agent2.add_to_memory([electionAgent2, electionAgent1])
     
-    # def execution(self):
+    def execution(self):
+        agent1election = self.Agent1.strategy()
+        agent2election = self.Agent2.strategy()
+
+        self.saveInMemory(agent1election, agent2election)
+        self.pointDistribution(agent1election, agent2election)

@@ -12,6 +12,9 @@ class Agent:
     
     def set_memory(self, mem):
         self.memory = mem
+
+    def add_to_memory(self, data):
+        self.memory.append(data)
     
     def add_points(self, n):
         self.points += n
