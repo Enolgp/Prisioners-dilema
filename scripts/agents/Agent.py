@@ -1,6 +1,10 @@
 class Agent:
     memory = []
     points = 0
+    
+    def __init__(self, name):
+        self.name = name
+
     def __init__(self) -> None:
         pass
     
@@ -16,5 +20,8 @@ class Agent:
     def add_to_memory(self, data):
         self.memory.append(data)
     
+    def get_name(self):
+        return self.name
+
     def add_points(self, n):
         self.points += n

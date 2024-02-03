@@ -6,11 +6,11 @@ s+="\\agents"
 sys.path.append(s)
 from phase1_agents import *
 
-TFT = TipForTap()
-RAN = Random()
+agents=phase1_agents.get_agents()
+num_interactions = 1000
 
-inte = Interaction(TFT, RAN)
-for i in range(1000):
-    inte.execution()
-
-print(TFT.get_points())
+for i in agents:
+    for j in agents:
+        int = Interaction(i, j)
+        for n in range(num_interactions):
+            int.execution()

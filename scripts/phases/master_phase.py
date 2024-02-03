@@ -1,3 +1,12 @@
+import sys
+import pathlib
+s=str(pathlib.Path(__file__).parent.parent.resolve())
+s+="\\data"
+sys.path.append(s)
+from tracker import Tracker
+
+trk = Tracker()
+
 class Interaction:
     Agent1 = None
     Agent2 = None
