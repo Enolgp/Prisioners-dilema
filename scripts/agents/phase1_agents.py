@@ -141,4 +141,8 @@ class MiddleMan(Agent):
         return 1
     
 # idea: paciencia/tentación. utiliza contadores para ver si el rival 
-    # lleva varias rondas colaborando o no colaborando
+    # lleva varias rondas colaborando o no colaborando y en función de eso
+    # le va a costar más hacer una acción u otra
+
+# idea 2: igual que la anterior pero teniendo en cuenta lo que ha hecho
+    # el propio agente
