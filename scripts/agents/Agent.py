@@ -4,9 +4,6 @@ class Agent:
     
     def __init__(self, name):
         self.name = name
-
-    def __init__(self) -> None:
-        pass
     
     def get_points(self):
         return self.points
@@ -25,3 +22,7 @@ class Agent:
 
     def add_points(self, n):
         self.points += n
+    
+    def reset(self):
+        self.points = 0
+        self.memory = []

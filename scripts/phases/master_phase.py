@@ -5,8 +5,6 @@ s+="\\data"
 sys.path.append(s)
 from tracker import Tracker
 
-trk = Tracker()
-
 class Interaction:
     Agent1 = None
     Agent2 = None
