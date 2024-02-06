@@ -23,4 +23,6 @@ for i in agentsA:
         for n in range(num_interactions):
             int.execution()
         trk.add_data(agent1=i, agent2=j)
-        trk.save_data("Phase1")
+
+# trk.save_data("Phase1")
+trk.show_data()
