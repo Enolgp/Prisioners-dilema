@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 class Agent:
     memory = []
     points = 0
@@ -26,3 +28,7 @@ class Agent:
     def reset(self):
         self.points = 0
         self.memory = []
+
+    @abstractmethod
+    def strategy(self):
+        pass
