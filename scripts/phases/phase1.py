@@ -13,7 +13,8 @@ from tracker import Tracker
 trk = Tracker()
 agentsA=get_agents()
 agentsB=get_agents()
-num_interactions = 500
+num_interactions = 5000
+
 
 for i in agentsA:
     for j in agentsB:

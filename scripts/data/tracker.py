@@ -22,12 +22,16 @@ class Tracker():
 
     def show_data(self):
         df=pd.DataFrame(self.data)
-        # df['agent1']= df[0][0]
+
         df['agent_1'] = df[0].apply(lambda x: x[0])
         df['agent_2'] = df[1].apply(lambda x: x[0])
         df['points_1'] = df[0].apply(lambda x: x[1])
         df['points_2'] = df[1].apply(lambda x: x[1])
 
-        newdf = df[['agent_1', 'points_1','agent_2', 'points_2']]
+        df = df[['agent_1', 'points_1','agent_2', 'points_2']]
+        print(df)
         
-       
+        averages = round(df.groupby(['agent_1'])['points_1'].mean().sort_values(), 2)
+        print(averages)
+        plt.barh(averages.index, averages.values)
+        plt.show()
