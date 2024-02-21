@@ -35,3 +35,37 @@ class Tracker():
         print(averages)
         plt.barh(averages.index, averages.values)
         plt.show()
+
+class Tracker_multi_execution():
+    data=[]
+
+    def get_data(self):
+        return self.data
+    
+    def save_data(self, name):
+        with open(f"data/{name}.csv", "w", newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(self.data)
+
+    # def add_data(self, agent1, agent2, num):
+    #     new_data=[
+    #         num,
+    #         [agent1.get_name(), agent1.get_points(), agent1.get_memory()],
+    #         [agent2.get_name(), agent2.get_points(), agent2.get_memory()],
+    #     ]
+    #     self.data.append(new_data)
+            
+    def add_data(self, row):
+        self.data.append(row)
+
+    def show_data(self):
+        df=pd.DataFrame(self.data)
+
+        df['agent_1'] = df[0].apply(lambda x: x[0])
+        df['agent_1'] = df[1].apply(lambda x: x[0])
+        df['agent_2'] = df[2].apply(lambda x: x[0])
+        df['points_1'] = df[1].apply(lambda x: x[1])
+        df['points_2'] = df[2].apply(lambda x: x[1])
+
+        df = df[['num_iteractions0','agent_1', 'points_1','agent_2', 'points_2']]
+        print(df)

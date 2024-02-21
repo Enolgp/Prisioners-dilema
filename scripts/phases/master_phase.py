@@ -33,3 +33,13 @@ class Interaction:
 
         self.saveInMemory(agent1election, agent2election)
         self.pointDistribution(agent1election, agent2election)
+
+def execution(listA, listB, tracker, num):
+    for i in listA:
+        for j in listB:
+            i.reset()
+            j.reset()
+            int = Interaction(i, j)
+            for n in range(num):
+                int.execution()
+            tracker.add_data(agent1=i, agent2=j)
