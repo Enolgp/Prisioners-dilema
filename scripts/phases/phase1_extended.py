@@ -13,6 +13,7 @@ sys.path.append(s)
 from master_phase import execution, Interaction
 import phase1_agents as ag
 import tracker as trk
+from tqdm import tqdm
 
 range_interactions = [100, 200]
 range_interactions.append(range(500, 15000))
@@ -34,10 +35,21 @@ def comparation_fixed_number(n):
     tracker.show_data()
 
 #testing
-patata=trk.Tracker_multi_execution()
+tracker=trk.Tracker_multi_execution()
 
-patata.add_data([10,'hernesto',100,'luisa',58,[1,0,0,1],[1,1,1,1]])
-patata.add_data([11,'hernesto',100,'luisa',58,[1,0,0,1],[1,1,1,1]])
-patata.add_data([12,'hernesto',100,'luisa',58,[1,0,0,1],[1,1,1,1]])
-patata.add_data([13,'hernesto',100,'luisa',58,[1,0,0,1],[1,1,1,1]])
-print(patata.show_data())
+def execution(listA, listB, tracker, num):
+    for i in listA:
+        for j in listB:
+            i.reset()
+            j.reset()
+            int = Interaction(i, j)
+            for n in tqdm(range(num)):
+                int.execution()
+            tracker.add_data(num, agent1=i, agent2=j)
+
+for i in tqdm(range(50, 5050, 250), desc='los agentes interactuan entre si'):
+    execution(agentsA, agentsB, tracker, i)
+
+tracker.show_data()
+# patata.add_data([10,'hernesto',105,'luisa',5,[1,0,0,1],[1,1,1,1]])
+
