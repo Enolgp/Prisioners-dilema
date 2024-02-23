@@ -47,7 +47,7 @@ def execution(listA, listB, tracker, num):
                 int.execution()
             tracker.add_data(num, agent1=i, agent2=j)
 
-for i in tqdm(range(50, 5050, 250), desc='los agentes interactuan entre si'):
+for i in tqdm(range(10, 1010, 200), desc='los agentes interactuan entre si'):
     execution(agentsA, agentsB, tracker, i)
 
 tracker.show_data()

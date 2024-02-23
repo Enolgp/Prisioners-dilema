@@ -9,10 +9,13 @@ s+="\\data"
 sys.path.append(s)
 from phase1_agents import *
 from tracker import Tracker
+import tqdm
 
 trk = Tracker()
 agentsA=get_agents()
 agentsB=get_agents()
+for i in range(15):
+    agentsB.append(MiddleMan())
 num_interactions = 1000
 
 

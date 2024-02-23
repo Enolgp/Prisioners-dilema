@@ -17,7 +17,9 @@ def get_agents():
         MiddleMan(),
         Tentated(),
         ShortTimeMemomry(),
-        RandomDataSample()
+        RandomDataSample(),
+        FriendlyDifference(),
+        SelfishDifference(37)
     ]
     return agents
 
@@ -245,3 +247,53 @@ class RandomDataSample(Agent):
         if sum(arr)/n > 0.5:
             return 1
         return 0
+    
+class Difference(Agent):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def diference(self):
+        # points of self
+        x=0
+        #points of rival
+        y=0
+        for i in self.memory:
+            if i[0] == i[1] == 0:
+                x+=3
+                y+=3
+            if i[0] == i[1] == 1:
+                x+=1
+                y+=1
+            if i[0] == 0 and i[1] == 1:
+                x+=5
+                y+=0
+            if i[0] == 1 and i[1] == 0:
+                x+=0
+                y+=5
+        return x-y
+    
+class SelfishDifference(Difference):
+    n=None
+    def __init__(self, n):
+        super().__init__(f"Selfish Difference (-{n}, {n})")
+        self.n=n
+    def strategy(self):
+        '''
+        It doesn't colaborate while the point difference beetween itself and the
+        other is in the (-30, 30) range
+        '''
+        diff = self.diference() if len(self.memory) != 0 else 0
+
+        return 0 if diff <-self.n or diff > self.n else 1
+
+class FriendlyDifference(Difference):
+    def __init__(self):
+        super().__init__("Friendly Difference")
+    def strategy(self):
+        '''
+        It colaborates while the point difference beetween itself and the
+        other is in the (-30, 30) range
+        '''
+        diff = self.diference() if len(self.memory) != 0 else 0
+
+        return 1 if diff <-30 or diff > 30 else 0
