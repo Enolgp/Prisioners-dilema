@@ -2,76 +2,51 @@ import csv
 import pandas as pd
 import matplotlib.pyplot as plt
 
-class Tracker():
-    data = []
+'''
+Recieve a list(1) of list(2) where the list 2 is like:
+[
+number of iteractions,
+name of agent 1,
+points of agent 1,
+name of agent 2,
+points of agent 2,
+memory of agent 1,
+]
+Returns a graph of bars comparing the average points of each agent
+'''
+def show_comparation(data):
+        n=data[0][0]
+        df=pd.DataFrame(data)
 
-    def get_data(self):
-        return self.data
-    
-    def add_data(self, agent1, agent2):
-        new_data=[
-            [agent1.get_name(), agent1.get_points(), agent1.get_memory()],
-            [agent2.get_name(), agent2.get_points(), agent2.get_memory()],
-        ]
-        self.data.append(new_data)
+        df['agent'] = df[1]
+        df['points'] = df[2]
 
-    def save_data(self, name):
-        with open(f"data/{name}.csv", "w", newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(self.data)
-
-    def show_data(self):
-        df=pd.DataFrame(self.data)
-
-        df['agent_1'] = df[0].apply(lambda x: x[0])
-        df['agent_2'] = df[1].apply(lambda x: x[0])
-        df['points_1'] = df[0].apply(lambda x: x[1])
-        df['points_2'] = df[1].apply(lambda x: x[1])
-
-        df = df[['agent_1', 'points_1','agent_2', 'points_2']]
-        print(df)
+        df = df[['agent', 'points']]
         
-        averages = round(df.groupby(['agent_1'])['points_1'].mean().sort_values(), 2)
-        print(averages)
-        plt.barh(averages.index, averages.values)
+        average = round(df.groupby(['agent'])['points'].mean().sort_values(), 2)
+        plt.title(f"Average points for {n} iteractions")
+        plt.barh(average.index, average.values)
         plt.show()
 
-class Tracker_multi_execution():
-    data=[]
-
-    def get_data(self):
-        return self.data
-    
-    def save_data(self, name):
-        with open(f"data/{name}.csv", "w", newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(self.data)
-
-    # def add_data(self, agent1, agent2, num):
-    #     new_data=[
-    #         num,
-    #         [agent1.get_name(), agent1.get_points(), agent1.get_memory()],
-    #         [agent2.get_name(), agent2.get_points(), agent2.get_memory()],
-    #     ]
-    #     self.data.append(new_data)
-            
-    def add_data(self, num, agent1, agent2):
-        self.data.append([
-            num,
-            agent1.get_name(),
-            agent1.get_points(),
-            agent2.get_name(),
-            agent2.get_points()
-        ])
-
-    def show_data(self):
-        df=pd.DataFrame(self.data)
+'''
+Recieve a list(1) of list(2) where the list 2 is like:
+[
+number of iteractions,
+name of agent 1,
+points of agent 1,
+name of agent 2,
+points of agent 2,
+memory of agent 1,
+]
+Returns a graph of lines comparing the evolution of the average points of each agent
+over several number of iteractions
+'''
+def show_evolution(data):
+        df=pd.DataFrame(data)
 
         df['num_iteractions'] = df[0]
         df['agent_1'] = df[1]
-        df['agent_2'] = df[3]
         df['points_1'] = df[2]
-        df['points_2'] = df[4]
 
         df = df[['num_iteractions','agent_1', 'points_1']]
 
@@ -87,3 +62,5 @@ class Tracker_multi_execution():
         plt.title('Evolution with number of iteractions')
         plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
         plt.show()
+
+#save in css

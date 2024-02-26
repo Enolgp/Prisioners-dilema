@@ -1,3 +1,4 @@
+from master_phase import Interaction
 import sys
 import pathlib
 s=str(pathlib.Path(__file__).parent.parent.resolve())
@@ -6,14 +7,33 @@ sys.path.append(s)
 s=str(pathlib.Path(__file__).parent.parent.resolve())
 s+="\\data"
 sys.path.append(s)
-s=str(pathlib.Path(__file__).parent.parent.resolve())
-s+="\\phases"
-sys.path.append(s)
+from phase1_agents import *
+from tracker2 import Tracker
+import tqdm
 
-from master_phase import execution, Interaction
-import phase1_agents as ag
-import tracker as trk
-from tqdm import tqdm
+trk = Tracker()
+agentsA=get_agents()
+agentsB=get_agents()
+for i in range(15):
+    agentsB.append(MiddleMan())
+num_interactions = 1000
+
+
+for i in agentsA:
+    for j in agentsB:
+        i.reset()
+        j.reset()
+        int = Interaction(i, j)
+        for n in range(num_interactions):
+            int.execution()
+        trk.add_data(agent1=i, agent2=j)
+
+# trk.save_data("Phase1")
+trk.show_data()
+
+# ====================================
+# PHASE 1 EXTENDED
+# ====================================
 
 range_interactions = [100, 200]
 range_interactions.append(range(500, 15000))
@@ -52,4 +72,3 @@ for i in tqdm(range(10, 1010, 200), desc='los agentes interactuan entre si'):
 
 tracker.show_data()
 # patata.add_data([10,'hernesto',105,'luisa',5,[1,0,0,1],[1,1,1,1]])
-
