@@ -1,5 +1,6 @@
 import sys
 import pathlib
+from tqdm import tqdm
 
 class Interaction:
     Agent1 = None
@@ -34,12 +35,23 @@ class Interaction:
         self.saveInMemory(agent1election, agent2election)
         self.pointDistribution(agent1election, agent2election)
 
-# def execution(listA, listB, tracker, num):
-#     for i in listA:
-#         for j in listB:
-#             i.reset()
-#             j.reset()
-#             int = Interaction(i, j)
-#             for n in range(num):
-#                 int.execution()
-#             tracker.add_data(agent1=i, agent2=j)
+def execute_interactions(listA, listB, *args):
+    data=[]
+    range_iteractions = [args[0]] if type(args[0]) == int else args[0]
+    for num_iteractions in tqdm(range_iteractions):
+        for i in listA if type(args[0])!= int else tqdm(listA):
+            for j in listB:
+                i.reset()
+                j.reset()
+                inter = Interaction(i, j)
+                for n in range(num_iteractions):
+                    inter.execution()
+                data.append([
+                    num_iteractions,
+                    i.get_name(),
+                    i.get_points(),
+                    j.get_name(),
+                    j.get_points(),
+                    i.get_memory(),
+                ])
+    return data
