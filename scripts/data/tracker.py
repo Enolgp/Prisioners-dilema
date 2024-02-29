@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 '''
-Recieve a list(1) of list(2) where the list 2 is like:
+Recieve a list(1) of list(2) and a list of optional parameters, where the list 2 is like:
 [
 number of iteractions,
 name of agent 1,
@@ -12,11 +12,14 @@ name of agent 2,
 points of agent 2,
 memory of agent 1,
 ]
+if a second optional parameter is given, the graphic with be saved with 
+the name of that parameter in the folder 'data/img'
 Returns a graph of bars comparing the average points of each agent
 '''
-def show_comparation(data):
+def show_comparation(data, *args):
         n=data[0][0]
         df=pd.DataFrame(data)
+        name = args[0] if len(args)!=0 else None
 
         df['agent'] = df[1]
         df['points'] = df[2]
@@ -24,12 +27,15 @@ def show_comparation(data):
         df = df[['agent', 'points']]
         
         average = round(df.groupby(['agent'])['points'].mean().sort_values(), 2)
+        averages = averages.rename(columns={'points_1':'average'})
         plt.title(f"Average points for {n} iteractions")
         plt.barh(average.index, average.values)
+        if name:
+            plt.savefig(f'data/img/{name}.png', bbox_inches='tight')
         plt.show()
 
 '''
-Recieve a list(1) of list(2) and an optional parameter where the list 2 is like:
+Recieve a list(1) of list(2) and an list of optional parameters where the list(2) is like:
 [
 number of iteractions,
 name of agent 1,
@@ -40,10 +46,15 @@ memory of agent 1,
 ],
 the optional parameter can be empty which returns a line for each agent on a number n
 wich returns the top n agents ordered by points
+if a second optional parameter is given, the function will save the graphic with the name of
+that parameter in the folder 'data/img'
 Returns a graph of lines comparing the evolution of the average points of each agent
 over several number of iteractions
 '''
 def show_evolution(data, *args):
+    top = args[0] if type(args[0])==int else None
+    name = args[0] if len(args)>0 and top==None else args[1]
+
     df=pd.DataFrame(data)
 
     df['num_iteractions'] = df[0]
@@ -55,10 +66,10 @@ def show_evolution(data, *args):
     averages = round(df.groupby(['agent_1','num_iteractions'])['points_1'].mean().reset_index(), 2)
     averages = averages.rename(columns={'points_1':'average'})
 
-    if len(args)==0:
-        list_agents = averages['agent_1'].unique()
+    if top:
+        list_agents = averages.sort_values('average', ascending=False)['agent_1'].unique()[:top]
     else:
-         list_agents = averages.sort_values('average', ascending=False)['agent_1'].unique()[:args[0]]
+        list_agents = averages['agent_1'].unique()
 
     for agent in list_agents:
         df_agent = averages[averages['agent_1']==agent]
@@ -66,11 +77,45 @@ def show_evolution(data, *args):
     
     plt.xlabel("Num-Iteractions")
     plt.ylabel("Averages")
-    plt.title('Evolution with number of iteractions')
+    if top:
+        plt.title(f'Evolution of top {top} agents with number of iteractions')
+    else: 
+        plt.title('Evolution with number of iteractions')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    if name:
+        if top:
+            plt.savefig(f'data/img/{name}_top{top}.png', bbox_inches='tight') 
+        else:
+            plt.savefig(f'data/img/{name}.png', bbox_inches='tight') 
     plt.show()
 
+'''
+Recieve an array of data and a name.
+Save the array of data in the folder 'data/csv' with the name given
+'''
 def save_csv(data, name):
-    with open(f"data/{name}.csv", "w", newline='') as file:
+    with open(f"data/csv/{name}.csv", "w", newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
+
+def agent_optimization(data, name, save=False):
+        n=data[0][0]
+        df=pd.DataFrame(data)
+
+        df['agent'] = df[1]
+        df['points'] = df[2]
+
+        df = df[['agent', 'points']]
+        
+        average = round(df.groupby(['agent'])['points'].mean().sort_values(), 2)
+        df_average = pd.DataFrame({'agent': average.index, 'points': average.values})
+
+        print(df_average)
+        print("agent name: "+ name)
+        result = df_average[df_average['agent'].str.contains(name)]
+        print(result)
+        plt.title(f"comparation of {name} values")
+        plt.barh(result['agent'], result['points'])
+        if save:
+            plt.savefig(f'data/img/optimization_{name}.png', bbox_inches='tight')
+        plt.show()

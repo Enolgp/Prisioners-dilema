@@ -18,10 +18,13 @@ agentsA = ag.get_agents()
 agentsB = ag.get_agents()
 
 # comparative graph
-trk.show_comparation(execute_interactions(agentsA, agentsB, 50))
+compare_data =execute_interactions(agentsA, agentsB, 200)
+trk.show_comparation(compare_data, 'comparation_phase1')
+trk.save_csv(compare_data, 'Comparation_phase1')
 # graph ov evolutions
-evol_data = execute_interactions(agentsA, agentsB, range(100, 201, 10))
-trk.show_evolution(evol_data)
-trk.show_evolution(evol_data, 3)
+evol_data = execute_interactions(agentsA, agentsB, range(100, 201, 25))
+trk.show_evolution(evol_data, 'Evolution_phase1')
+trk.show_evolution(evol_data, 5, 'Evolution_phase1')
+trk.save_csv(evol_data, 'Evolution_phase1')
 
 # study the behaviour of each agent when facing the mayority each type of agent

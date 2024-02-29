@@ -18,8 +18,8 @@ def get_agents():
         Tentated(),
         ShortTimeMemomry(),
         RandomDataSample(),
-        FriendlyDifference(),
-        SelfishDifference(37)
+        FriendlyDifference()
+        # SelfishDifference(37)
     ]
     return agents
 
