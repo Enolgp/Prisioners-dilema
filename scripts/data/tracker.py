@@ -1,4 +1,5 @@
 import csv
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -8,15 +9,16 @@ Recieve a list(1) of list(2) and a list of optional parameters, where the list 2
 number of iteractions,
 name of agent 1,
 points of agent 1,
-name of agent 2,
+name of agent 2, 
 points of agent 2,
 memory of agent 1,
 ]
 if a second optional parameter is given, the graphic with be saved with 
 the name of that parameter in the folder 'data/img'
 Returns a graph of bars comparing the average points of each agent
+if parameter show is equalized to True, the graph will be show. Otherwise it will only be saved
 '''
-def show_comparation(data, *args):
+def show_comparation(data, *args, show=False, overwrite=True):
         n=data[0][0]
         df=pd.DataFrame(data)
         name = args[0] if len(args)!=0 else None
@@ -27,12 +29,16 @@ def show_comparation(data, *args):
         df = df[['agent', 'points']]
         
         average = round(df.groupby(['agent'])['points'].mean().sort_values(), 2)
-        averages = averages.rename(columns={'points_1':'average'})
+        df_average = pd.DataFrame({'agent': average.index, 'points': average.values})
         plt.title(f"Average points for {n} iteractions")
-        plt.barh(average.index, average.values)
+        plt.barh(df_average['agent'],df_average['points'])
         if name:
-            plt.savefig(f'data/img/{name}.png', bbox_inches='tight')
-        plt.show()
+            if overwrite:
+                plt.savefig(f'data/img/{name}.png',bbox_inches='tight')
+            else:
+                save_graph(f'{name}.png', 'data/img')
+        if show:
+            plt.show()
 
 '''
 Recieve a list(1) of list(2) and an list of optional parameters where the list(2) is like:
@@ -50,8 +56,9 @@ if a second optional parameter is given, the function will save the graphic with
 that parameter in the folder 'data/img'
 Returns a graph of lines comparing the evolution of the average points of each agent
 over several number of iteractions
+if parameter show is equalized to True, the graph will be show. Otherwise it will only be saved
 '''
-def show_evolution(data, *args):
+def show_evolution(data, *args, show = False, overwrite=True):
     top = args[0] if type(args[0])==int else None
     name = args[0] if len(args)>0 and top==None else args[1]
 
@@ -84,10 +91,18 @@ def show_evolution(data, *args):
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     if name:
         if top:
-            plt.savefig(f'data/img/{name}_top{top}.png', bbox_inches='tight') 
+            if overwrite:
+                plt.savefig(f'data/img/{name}_top{top}.png',bbox_inches='tight')
+            else:
+                save_graph(f'{name}_top{top}.png', 'data/img')
         else:
-            plt.savefig(f'data/img/{name}.png', bbox_inches='tight') 
-    plt.show()
+            if overwrite:
+                plt.savefig(f'data/img/{name}.png',bbox_inches='tight')
+            else:
+                save_graph(f'{name}.png', 'data/img')
+
+    if show: 
+        plt.show()
 
 '''
 Recieve an array of data and a name.
@@ -98,7 +113,7 @@ def save_csv(data, name):
         writer = csv.writer(file)
         writer.writerows(data)
 
-def agent_optimization(data, name, save=False):
+def agent_optimization(data, name, save=False, show=False, overwrite=True):
         n=data[0][0]
         df=pd.DataFrame(data)
 
@@ -117,5 +132,17 @@ def agent_optimization(data, name, save=False):
         plt.title(f"comparation of {name} values")
         plt.barh(result['agent'], result['points'])
         if save:
-            plt.savefig(f'data/img/optimization_{name}.png', bbox_inches='tight')
-        plt.show()
+            if overwrite:
+                plt.savefig(f'data/img/comparation/optimization_{name}.png',bbox_inches='tight')
+            else:
+                save_graph(f'optimization_{name}', 'data/img/comparation')
+        if show:
+            plt.show()
+
+def save_graph(name, route=''):
+    i = 0
+    file_name = name
+    while os.path.exists(os.path.join(route, file_name)):
+        i += 1
+        file_name = f"{name}({i}).png"
+    plt.savefig(os.path.join(route, file_name), bbox_inches='tight')

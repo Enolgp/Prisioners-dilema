@@ -2,25 +2,31 @@ from Agent import Agent
 import random
 import numpy as np
 
-def get_agents():
-    agents = [
-        TipForTap(),
-        Random(),
-        AlwaysColab(),
-        NeverColab(),
-        Trigger(),
-        Pavlov(),
-        ForgivingTipForTap(),
-        Spiteful(),
-        ReverseTipForTap(),
-        Mayority(),
-        MiddleMan(),
-        Tentated(),
-        ShortTimeMemomry(),
-        RandomDataSample(),
-        FriendlyDifference()
-        # SelfishDifference(37)
-    ]
+def get_agents(*args):
+    agents=[]
+    if len(args)==0:
+        agents = [
+            TipForTap(),
+            Random(),
+            AlwaysColab(),
+            NeverColab(),
+            Trigger(),
+            Pavlov(),
+            ForgivingTipForTap(),
+            Spiteful(),
+            ReverseTipForTap(),
+            Mayority(),
+            MiddleMan(),
+            Tentated(),
+            ShortTimeMemomry(),
+            RandomDataSample(),
+            FriendlyDifference(),
+            SelfishDifference()
+        ]
+    else:
+        for agent in get_agents():
+            if agent.get_name() != args[0]:
+                agents.append(agent)
     return agents
 
 class TipForTap(Agent):
@@ -175,9 +181,16 @@ class MiddleMan(Agent):
     >80% its likely to obtain more benefict
     <20% its not likely to obtanin benefict
     '''
-    def __init__(self):
-        super().__init__("Middle man")
-    
+    def __init__(self, *args):
+        if len(args)==0:
+            self.min = 20
+            self.max = 80
+            super().__init__(f"Middle Man")
+        else:
+            self.min = args[0][0]
+            self.max = args[0][1]
+            super().__init__(f"Middle Man ({self.min},{self.max})")
+
     def strategy(self):
         arr = np.array(self.memory)
 
@@ -185,7 +198,7 @@ class MiddleMan(Agent):
             return 1
         
         x =arr.sum(axis=0)[1]/len(self.memory)
-        if x >= 0.8 or x <= 0.2:
+        if x >= self.max/100 or x <= self.min/100:
             return 0
         return 1
 
@@ -274,9 +287,14 @@ class Difference(Agent):
     
 class SelfishDifference(Difference):
     n=None
-    def __init__(self, n):
-        super().__init__(f"Selfish Difference (-{n}, {n})")
-        self.n=n
+    def __init__(self, *args):
+        if len(args)==0:
+            super().__init__(f"Selfish Difference")
+            self.n=30
+        else:
+            n=args[0]
+            super().__init__(f"Selfish Difference (-{n}, {n})")
+            self.n=n
     def strategy(self):
         '''
         It doesn't colaborate while the point difference beetween itself and the

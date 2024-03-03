@@ -1,6 +1,10 @@
+import pathlib
 import sys
 import pathlib
+s=str(pathlib.Path(__file__).parent.parent.resolve())
+s+="\\agents"
 from tqdm import tqdm
+import phase1_agents as ag
 
 class Interaction:
     Agent1 = None
@@ -35,11 +39,11 @@ class Interaction:
         self.saveInMemory(agent1election, agent2election)
         self.pointDistribution(agent1election, agent2election)
 
-def execute_interactions(listA, listB, *args):
+def execute_interactions(listA, listB, *args, progress=True):
     data=[]
     range_iteractions = [args[0]] if type(args[0]) == int else args[0]
-    for num_iteractions in tqdm(range_iteractions):
-        for i in listA if type(args[0])!= int else tqdm(listA):
+    for num_iteractions in tqdm(range_iteractions) if progress else range_iteractions:
+        for i in tqdm(listA) if type(args[0])== int and progress else listA:
             for j in listB:
                 i.reset()
                 j.reset()
@@ -55,3 +59,20 @@ def execute_interactions(listA, listB, *args):
                     i.get_memory(),
                 ])
     return data
+
+def optimize(agent, num_iteractions, agent_values):
+    data=[]
+    agentsB=ag.get_agents()
+
+    for i in tqdm(agent_values):
+        agentsA=ag.get_agents(agent)
+        if agent == 'Selfish Difference':
+            aux_agent = ag.SelfishDifference(i)
+        elif agent == 'Middle Man':
+            aux_agent = ag.MiddleMan(i)
+        agentsA.append(aux_agent)
+
+        aux= execute_interactions(agentsA, agentsB, num_iteractions, progress=False)
+        for line in aux:
+            data.append(line)
+    return [data, agent]

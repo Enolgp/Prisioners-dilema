@@ -3,27 +3,19 @@ import pathlib
 s=str(pathlib.Path(__file__).parent.parent.resolve())
 sys.path.append(s+"\\agents")
 sys.path.append(s+"\\data")
-sys.path.append(s+"\\phases")
+sys.path.append(s+"\\phases")    
 
-from master_phase import execute_interactions
+from master_phase import optimize
 import phase1_agents as ag
 import tracker as trk
 import pandas as pd
 
-data=[]
-agentsB=ag.get_agents()
+optimizeDiff = optimize('Selfish Difference', 2000, range(10,80,10))
+trk.agent_optimization(optimizeDiff[0], optimizeDiff[1])
 
-# make a function of this
-for i in range(10,100, 10):
-    agentsA=ag.get_agents()
-    agA = ag.SelfishDifference(i)
-    print(len(agentsA))
-    for a in agentsA:
-        s+=a.get_name()
-    print(s)
-    aux= execute_interactions(agentsA, agentsB, 500)
-    for line in aux:
-        data.append(line)
-
-print(pd.DataFrame(data))
-trk.agent_optimization(data, 'Selfish Difference')
+rangeMiddleMan=[]
+for i in range(0, 50,10):
+    for j in range(100, 49, -10):
+        rangeMiddleMan.append([i,j])
+optimizeDiff = optimize('Middle Man', 500, rangeMiddleMan)
+trk.agent_optimization(optimizeDiff[0], optimizeDiff[1])
