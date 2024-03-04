@@ -165,21 +165,21 @@ def show_table(data):
 
     df_pivot = aux.pivot(index='agent', columns='majority', values='points')
 
-    # Rellenamos los valores NaN con 0
+
     df_pivot = df_pivot.fillna(0)
 
-    # Imprimimos el nuevo dataframe
+
     print(df_pivot)
 
-    # Mostrar el dataframe df_pivot como tabla con matplotlib
+
     plt.imshow(df_pivot, cmap='viridis')
 
-    # Añadir etiquetas a los ejes x e y
+
     plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
     plt.yticks(range(len(df_pivot.index)), df_pivot.index)
 
-    # Añadir una barra de color para representar los valores
+
     plt.colorbar()
 
-    # Mostrar la tabla
+
     plt.show()
