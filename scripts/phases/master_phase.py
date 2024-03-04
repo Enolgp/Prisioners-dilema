@@ -55,9 +55,11 @@ def execute_interactions(listA, listB, *args, progress=True):
                     i.get_name(),
                     i.get_points(),
                     j.get_name(),
-                    j.get_points(),
-                    i.get_memory(),
+                    j.get_points()
+                    # i.get_memory(),
                 ])
+                if len(args)>1:
+                    data[len(data)-1].append(args[1])
     return data
 
 def optimize(agent, num_iteractions, agent_values):

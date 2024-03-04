@@ -146,3 +146,40 @@ def save_graph(name, route=''):
         i += 1
         file_name = f"{name}({i}).png"
     plt.savefig(os.path.join(route, file_name), bbox_inches='tight')
+
+def show_table(data):
+    df=pd.DataFrame(data)
+    df ['agent'] = df[1]
+    df ['points'] = df[2]
+    df ['majority'] = df[5]
+
+    df= df[['agent', 'points', 'majority']]
+    
+    average= round(df.groupby(['agent', 'majority'])['points'].mean(), 2)
+    aux=  pd.DataFrame({'agent': average.index.get_level_values(0),
+                        'majority': average.index.get_level_values(1),
+                         'points': average.values})
+    print(aux)
+
+    # Trying to show table
+
+    df_pivot = aux.pivot(index='agent', columns='majority', values='points')
+
+    # Rellenamos los valores NaN con 0
+    df_pivot = df_pivot.fillna(0)
+
+    # Imprimimos el nuevo dataframe
+    print(df_pivot)
+
+    # Mostrar el dataframe df_pivot como tabla con matplotlib
+    plt.imshow(df_pivot, cmap='viridis')
+
+    # Añadir etiquetas a los ejes x e y
+    plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
+    plt.yticks(range(len(df_pivot.index)), df_pivot.index)
+
+    # Añadir una barra de color para representar los valores
+    plt.colorbar()
+
+    # Mostrar la tabla
+    plt.show()

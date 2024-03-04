@@ -29,6 +29,15 @@ def get_agents(*args):
                 agents.append(agent)
     return agents
 
+def get_no_equitative_agents(name):
+    agents=[]
+    for agent in get_agents():
+        agents.append(agent)
+        if name == agent.get_name():
+            for i in range(len(get_agents())):
+                agents.append(agent)
+    return agents
+
 class TipForTap(Agent):
     def __init__(self):
         super().__init__("Tip fot Tap")
