@@ -19,6 +19,7 @@ Returns a graph of bars comparing the average points of each agent
 if parameter show is equalized to True, the graph will be show. Otherwise it will only be saved
 '''
 def show_comparation(data, *args, show=False, overwrite=True):
+        plt.clf()
         n=data[0][0]
         df=pd.DataFrame(data)
         name = args[0] if len(args)!=0 else None
@@ -59,6 +60,7 @@ over several number of iteractions
 if parameter show is equalized to True, the graph will be show. Otherwise it will only be saved
 '''
 def show_evolution(data, *args, show = False, overwrite=True):
+    plt.clf()
     top = args[0] if type(args[0])==int else None
     name = args[0] if len(args)>0 and top==None else args[1]
 
@@ -113,7 +115,8 @@ def save_csv(data, name):
         writer = csv.writer(file)
         writer.writerows(data)
 
-def agent_optimization(data, name, save=False, show=False, overwrite=True):
+def agent_optimization(data, name, save=False, show=True, overwrite=True):
+        plt.clf()
         n=data[0][0]
         df=pd.DataFrame(data)
 
@@ -139,17 +142,16 @@ def agent_optimization(data, name, save=False, show=False, overwrite=True):
         if show:
             plt.show()
 
-def save_graph(name, route=''):
+def save_graph(name, route='', table=False):
     i = 0
-    file_name = name
+    file_name = name if not table else name+'.png'
     while os.path.exists(os.path.join(route, file_name)):
         i += 1
-        file_name = f"{name}({i}).png"
-    if i==0:
-        file_name+='.png'
+        file_name = f"{name.replace('.png', '')}({i}).png"
     plt.savefig(os.path.join(route, file_name), bbox_inches='tight')
 
-def show_table(data):
+def show_table(data, type, show=False, overwrite=False, save=True):
+    plt.clf()
     df=pd.DataFrame(data)
     df ['agent'] = df[1]
     df ['points'] = df[2]
@@ -161,38 +163,45 @@ def show_table(data):
     aux=  pd.DataFrame({'agent': average.index.get_level_values(0),
                         'majority': average.index.get_level_values(1),
                          'points': average.values})
-    print(aux)
-
-    # Trying to show table
 
     df_pivot = aux.pivot(index='agent', columns='majority', values='points')
 
-    print(df_pivot)
-    # plt.imshow(df_pivot, cmap='viridis')
+    if type=='color' or type=='color-desc':
+        plt.imshow(df_pivot, cmap='viridis')
 
-    # plt.title(f'No equivalente table for {data[0][0]} interactions')
-    # plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
-    # plt.yticks(range(len(df_pivot.index)), df_pivot.index)
+        plt.title(f'No equivalente table for {data[0][0]} interactions')
+        plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
+        plt.yticks(range(len(df_pivot.index)), df_pivot.index)
 
-    # num_rows, num_cols = df_pivot.shape
+        num_rows, num_cols = df_pivot.shape
+        if type=='color-desc':
+            for i in range(num_rows):
+                for j in range(num_cols):
+                    plt.text(j, i, f'{df_pivot.iloc[i, j]:.1f}', ha='center', va='center', color='white', fontsize=8, bbox=dict(boxstyle='round', facecolor='none', edgecolor='none'))
+        plt.colorbar()
+        if save:
+            if overwrite:
+                plt.savefig(f'data/img/No_equivalent_table_{data[0][0]}_interactuions.png',bbox_inches='tight')
+            else:
+                save_graph(f'table_{data[0][0]}_interactuions', 'data/img', table=True)
+            if show:
+                plt.show()
+    elif type=='numeric':
+        tab = plt.table(cellText=df_pivot.values, 
+                 rowLabels=df_pivot.index,
+                 colLabels=df_pivot.columns, 
+                 loc='center', 
+                 cellLoc='center')
 
-    # for i in range(num_rows):
-    #     for j in range(num_cols):
-    #         plt.text(j, i, f'{df_pivot.iloc[i, j]:.1f}', ha='center', va='center', color='white', fontsize=8, bbox=dict(boxstyle='round', facecolor='none', edgecolor='none'))
-
-    # plt.colorbar()
-    # t.auto_set_font_size(False)
-    # save_graph(f'No_equivalent_table_{data[0][0]}_interactuions', 'data/img')
-    # plt.show()
-
-    '''fix the show of both tables. the one with colors (make the column wider) and the one without colors'''
-
-    fig, ax = plt.subplots()
-
-    tab0 = ax.table(cellText=df_pivot.values, rowLabels=df_pivot.index,colLabels=df_pivot.columns, loc='center', cellLoc='center')
-    ax.axis("off")
-    tab0.auto_set_font_size(False)
-    tab0.set_fontsize(8)
-
-    tab0.auto_set_column_width(col=list(range(len(df_pivot.columns))))
-    plt.show()
+        plt.axis("off")
+        plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
+        tab.auto_set_font_size(False)
+        tab.set_fontsize(8)
+        tab.auto_set_column_width(col=list(range(len(df_pivot.columns))))
+        if save:
+            if overwrite:
+                plt.savefig(f'data/img/No_equivalent_table_{data[0][0]}_interactuions.png',bbox_inches='tight')
+            else:
+                save_graph(f'table_{data[0][0]}_interactuions', 'data/img', table=True)
+        if show:
+            plt.show()

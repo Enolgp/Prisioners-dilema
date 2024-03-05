@@ -78,3 +78,11 @@ def optimize(agent, num_iteractions, agent_values):
         for line in aux:
             data.append(line)
     return [data, agent]
+
+def comparation_no_equitative(num_interactions):
+    agentsA=ag.get_agents()
+    data=[]
+    for agen in tqdm(agentsA):
+        agentsB = ag.get_no_equitative_agents(agen.get_name())
+        data.extend(execute_interactions(agentsA, agentsB, num_interactions, agen.get_name(), progress=False))
+    return data

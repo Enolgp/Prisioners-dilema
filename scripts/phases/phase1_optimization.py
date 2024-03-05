@@ -10,12 +10,12 @@ import phase1_agents as ag
 import tracker as trk
 import pandas as pd
 
-optimizeDiff = optimize('Selfish Difference', 2000, range(10,80,10))
-trk.agent_optimization(optimizeDiff[0], optimizeDiff[1])
+optimizeDiff = optimize('Selfish Difference', 500, range(10,80,10))
+trk.agent_optimization(optimizeDiff[0], optimizeDiff[1], save=True)
 
 rangeMiddleMan=[]
 for i in range(0, 50,10):
     for j in range(100, 49, -10):
         rangeMiddleMan.append([i,j])
 optimizeDiff = optimize('Middle Man', 500, rangeMiddleMan)
-trk.agent_optimization(optimizeDiff[0], optimizeDiff[1])
+trk.agent_optimization(optimizeDiff[0], optimizeDiff[1], save=True)
