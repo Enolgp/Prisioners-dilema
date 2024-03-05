@@ -145,6 +145,8 @@ def save_graph(name, route=''):
     while os.path.exists(os.path.join(route, file_name)):
         i += 1
         file_name = f"{name}({i}).png"
+    if i==0:
+        file_name+='.png'
     plt.savefig(os.path.join(route, file_name), bbox_inches='tight')
 
 def show_table(data):
@@ -165,21 +167,32 @@ def show_table(data):
 
     df_pivot = aux.pivot(index='agent', columns='majority', values='points')
 
-
-    df_pivot = df_pivot.fillna(0)
-
-
     print(df_pivot)
+    # plt.imshow(df_pivot, cmap='viridis')
 
+    # plt.title(f'No equivalente table for {data[0][0]} interactions')
+    # plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
+    # plt.yticks(range(len(df_pivot.index)), df_pivot.index)
 
-    plt.imshow(df_pivot, cmap='viridis')
+    # num_rows, num_cols = df_pivot.shape
 
+    # for i in range(num_rows):
+    #     for j in range(num_cols):
+    #         plt.text(j, i, f'{df_pivot.iloc[i, j]:.1f}', ha='center', va='center', color='white', fontsize=8, bbox=dict(boxstyle='round', facecolor='none', edgecolor='none'))
 
-    plt.xticks(range(len(df_pivot.columns)), df_pivot.columns, rotation=90)
-    plt.yticks(range(len(df_pivot.index)), df_pivot.index)
+    # plt.colorbar()
+    # t.auto_set_font_size(False)
+    # save_graph(f'No_equivalent_table_{data[0][0]}_interactuions', 'data/img')
+    # plt.show()
 
+    '''fix the show of both tables. the one with colors (make the column wider) and the one without colors'''
 
-    plt.colorbar()
+    fig, ax = plt.subplots()
 
+    tab0 = ax.table(cellText=df_pivot.values, rowLabels=df_pivot.index,colLabels=df_pivot.columns, loc='center', cellLoc='center')
+    ax.axis("off")
+    tab0.auto_set_font_size(False)
+    tab0.set_fontsize(8)
 
+    tab0.auto_set_column_width(col=list(range(len(df_pivot.columns))))
     plt.show()

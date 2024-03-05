@@ -25,6 +25,6 @@ for agen in tqdm(agentsA):
     lst=[]
     for aux in agentsB:
         lst.append(aux.get_name())
-    data.extend(execute_interactions(agentsA, agentsB, 10, agen.get_name(), progress=False))
+    data.extend(execute_interactions(agentsA, agentsB, 50, agen.get_name(), progress=False))
 
 trk.show_table(data)
